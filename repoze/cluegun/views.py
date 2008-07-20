@@ -1,12 +1,16 @@
 import os
+import urlparse
 
-import webob
 import formencode
+import webob
+
+from paste import urlparser
 
 import pygments
 from pygments import lexers
 from pygments import formatters
 from pygments import util
+
 
 from repoze.bfg.wsgi import wsgiapp
 from repoze.bfg.template import render_template_to_response
@@ -17,25 +21,29 @@ from repoze.cluegun.models import PasteEntry
 from repoze.cluegun.models import IPasteBin
 from repoze.cluegun.version import get_version
 
+app_version = get_version()
+
 COOKIE_LANGUAGE = 'cluebin.last_lang'
 COOKIE_AUTHOR = 'cluebin.last_author'
 
+here = os.path.abspath(os.path.dirname(__file__))
+static = urlparser.StaticURLParser(os.path.join(here, 'static', '..'))
+
 @wsgiapp
 def static_view(environ, start_response):
-    from paste import urlparser
-    here = os.path.abspath(os.path.dirname(__file__))
-    static = urlparser.StaticURLParser(os.path.join(here, 'static'))
     return static(environ, start_response)
 
-def get_pastes(context):
+def get_pastes(context, request):
     pastebin = find_interface(context, IPasteBin)
     pastes = []
+    app_url = request.application_url
     for name, entry in pastebin.items():
         if entry.date is not None:
             pdate = entry.date.strftime('%x at %X')
         else:
             pdate = 'UNKNOWN'
-        new = {'author':entry.author_name, 'date':pdate, 'url':name}
+        paste_url = urlparse.urljoin(app_url, name)
+        new = {'author':entry.author_name, 'date':pdate, 'url':paste_url}
         pastes.append(new)
     return pastes
 
@@ -53,19 +61,20 @@ def entry_view(context, request):
     formatter = formatters.HtmlFormatter(linenos=True,
                                          cssclass="source")
     formatted_paste = pygments.highlight(paste, l, formatter)
+    pastes = get_pastes(context, request)
+
     inner = render_template('templates/view.pt',
                             style_defs=formatter.get_style_defs(),
                             lexer_name=l.name,
-                            paste=formatted_paste)
-
-    pastes = get_pastes(context)
+                            paste=formatted_paste,
+                            pastes=pastes)
 
     return render_template_to_response(
         'templates/index.pt',
-        version = get_version(),
+        version = app_version,
         body = inner,
         message = None,
-        pastes = pastes,
+        application_url = request.application_url,
         )
 
 def preferred_language(request):
@@ -130,17 +139,19 @@ def index_view(context, request):
         our_lexers.append({'selected':selected, 'alias':aliases[0],
                            'name':name})
 
-    formadd =  render_template('templates/add.pt', author_name=author_name,
-                               paste=paste, lexers=our_lexers)
+    pastes = get_pastes(context, request)
 
-    pastes = get_pastes(context)
+    formadd =  render_template('templates/add.pt', author_name=author_name,
+                               paste=paste, lexers=our_lexers,
+                               pastes=pastes)
 
     body = render_template(
         'templates/index.pt',
-        version = get_version(),
+        version = app_version,
         body = formadd,
         message = message,
         pastes = pastes,
+        application_url = request.application_url,
         )
     response.unicode_body = unicode(body)
     return response

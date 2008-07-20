@@ -24,4 +24,17 @@
     <input type="submit" />
   </fieldset>
 </form>
+
+<div class="right" tal:condition="pastes">
+  <fieldset>
+    <legend>Previous Pastes</legend>
+    <ul>
+      <li tal:repeat="paste pastes">
+        <a href="${paste.url}"
+           >By: ${paste.author} on ${paste.date}</a>
+      </li>
+    </ul>
+  </fieldset>
+</div>
+
 </div>
