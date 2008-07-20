@@ -1,0 +1,12 @@
+PRE { margin: 0; }
+.code, .linenos { font-size: 90%; }
+.source { border: 1px #999 dashed; margin: 0; padding: 1em }
+.left { width: 70%; float: left; }
+.right { margin-left: 2em; width: 20%; float: left; }
+.field { margin-bottom: 1em; }
+.field LABEL { font-weight: bold; width: 20%; display: block; float: left; }
+.field INPUT { width: 80% }
+.field TEXTAREA { width: 100%; height: 10em }
+.previous_paste DD { margin-left: 0; }
+.clear { display: block; clear; both; }
+.header { font-size: 90%; float: right; }

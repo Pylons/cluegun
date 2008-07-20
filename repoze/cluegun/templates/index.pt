@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>ClueGun pastebin</title>
+    <link rel="stylesheet" type="text/css" href="static/styles.css" />
+  </head>
+  <body>
+    <div id="main">
+
+      <div class="header">ClueGun ${version} by <a
+         href="http://repoze.org" >The Repoze Folks</a> (based on ClueBin by <a
+         href="http://www.serverzen.com">ServerZen Software</a>).
+      </div>
+         ${body}
+      <div class="footer">© Agendaless Consulting, ServerZen Software 2008</div>
+      <div class="clear">
+        <!-- -->
+      </div>
+    </div>
+  </body>
+</html>
