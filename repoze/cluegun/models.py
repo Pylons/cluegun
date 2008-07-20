@@ -35,7 +35,7 @@ class PasteEntry(Persistent):
         self.language = language
         self.date = datetime.now()
 
-class RootFinder:
+class PersistentRootFinder:
     db = None
     def __init__(self, db_file):
         self.db_file = db_file

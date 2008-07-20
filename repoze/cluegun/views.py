@@ -77,12 +77,6 @@ def entry_view(context, request):
         application_url = request.application_url,
         )
 
-def preferred_language(request):
-    language = request.cookies.get(COOKIE_LANGUAGE, u'')
-    if isinstance(language, str):
-        language = unicode(language, 'utf-8')
-    return language
-
 def preferred_author(request):
     author_name = request.params.get('author_name', u'')
     if not author_name:
@@ -91,20 +85,24 @@ def preferred_author(request):
         author_name = unicode(author_name, 'utf-8')
     return author_name
 
+all_lexers = list(lexers.get_all_lexers())
+all_lexers.sort()
+lexer_info = []
+for name, aliases, filetypes, mimetypes_ in all_lexers:
+    lexer_info.append({'alias':aliases[0], 'name':name})
+
 class PasteAddSchema(formencode.Schema):
     allow_extra_fields = True
     paste = formencode.validators.NotEmpty()
 
-all_lexers = list(lexers.get_all_lexers())
-all_lexers.sort()
-
 def index_view(context, request):
     params = request.params
     author_name = preferred_author(request)
-    language = preferred_language(request)
+    language = u''
     paste = u''
     message = u''
     response = webob.Response()
+    app_url = request.application_url
 
     if params.has_key('form.submitted'):
         paste = request.params.get('paste', '')
@@ -130,15 +128,7 @@ def index_view(context, request):
             pobj = PasteEntry(author_name, paste, language)
             pasteid = context.add_paste(pobj)
             response.status = '301 Moved Permanently'
-            response.headers['Location'] = '/%s' % pasteid
-
-    our_lexers = []
-    for name, aliases, filetypes, mimetypes_ in all_lexers:
-        selected = False
-        if language == aliases[0]:
-            selected = 'selected'
-        our_lexers.append({'selected':selected, 'alias':aliases[0],
-                           'name':name})
+            response.headers['Location'] = '%s/%s' % (app_url, pasteid)
 
     pastes = get_pastes(context, request)
 
@@ -146,11 +136,11 @@ def index_view(context, request):
         'templates/index.pt',
         author_name = author_name,
         paste = paste,
-        lexers = our_lexers,
+        lexers = lexer_info,
         version = app_version,
         message = message,
         pastes = pastes,
-        application_url = request.application_url,
+        application_url = app_url,
         )
     response.unicode_body = unicode(body)
     return response
