@@ -1,7 +1,6 @@
 import unittest
 import doctest
 
-
 def test_suite():
     flags = doctest.ELLIPSIS
     suite = unittest.TestSuite()
@@ -13,7 +12,6 @@ def test_suite():
                                        optionflags=flags))
 
     return suite
-
 
 def main():
     runner = unittest.TextTestRunner()

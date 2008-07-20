@@ -29,7 +29,7 @@ def get_version():
     except NameError:
         here = os.path.abspath(os.getcwd())
     f = os.path.join(here, 'repoze', 'cluegun', 'VERSION.txt')
-    version = f.readline().strip()
+    version = open(f).readline().strip()
     return version
 
 setup(name='repoze.cluegun',
@@ -56,13 +56,13 @@ setup(name='repoze.cluegun',
       zip_safe=False,
       tests_require = [
           'repoze.bfg',
-          'Pygments >= 0.9',
+          'Pygments',
       ],
       install_requires=[
           'repoze.bfg',
-          'Pygments >= 0.9',
+          'Pygments',
       ],
-      test_suite="repoze.cluegun.tests",
+      test_suite="repoze.cluegun.tests.test_suite",
       entry_points = """\
       [paste.app_factory]
       make_app = repoze.cluegun.run:make_app

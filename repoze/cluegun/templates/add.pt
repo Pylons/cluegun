@@ -1,0 +1,27 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:tal="http://xml.zope.org/namespaces/tal">
+<form action="." method="POST">
+   <input type="hidden" name="form.submitted"/>
+  <fieldset>
+    <legend>Paste Info</legend>
+    <div class="field">
+      <label for="author_name">Name</label>
+      <input type="text" name="author_name" value="${author_name}" />
+    </div>
+    <div class="field">
+      <label for="language">Language</label>
+      <select name="language">
+        <option value="">-- Auto detect --</option>
+        <option tal:repeat="lexer lexers"
+           value="${lexer.alias}" selected="${lexer.selected}"
+                  >${lexer.name}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="paste">Paste Text</label>
+      <textarea name="paste">${paste}</textarea>
+    </div>
+    <input type="submit" />
+  </fieldset>
+</form>
+</div>

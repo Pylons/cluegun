@@ -1,4 +1,5 @@
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:tal="http://xml.zope.org/namespaces/tal">
   <head>
     <title>ClueGun pastebin</title>
     <link rel="stylesheet" type="text/css" href="static/styles.css" />
@@ -10,8 +11,24 @@
          href="http://repoze.org" >The Repoze Folks</a> (based on ClueBin by <a
          href="http://www.serverzen.com">ServerZen Software</a>).
       </div>
-         ${body}
-      <div class="footer">© Agendaless Consulting, ServerZen Software 2008</div>
+      <div class="message" tal:condition="message|nothing"
+           tal:content="message">Error message</div>
+
+      <div tal:content="structure body"/>
+
+      <div class="right" tal:condition="pastes">
+        <fieldset>
+          <legend>Previous Pastes</legend>
+          <ul>
+            <li tal:repeat="paste pastes">
+              <a href="${paste.url}">By: ${paste.author} on ${paste.date}</a>
+            </li>
+          </ul>
+        </fieldset>
+      </div>
+
+      <div class="footer"
+            >(c) Agendaless Consulting, ServerZen Software 2008</div>
       <div class="clear">
         <!-- -->
       </div>

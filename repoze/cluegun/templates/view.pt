@@ -1,0 +1,14 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:tal="http://xml.zope.org/namespaces/tal">
+
+<style tal:content="style_defs"></style>
+
+<a href="..">Main page</a>
+
+<dl class="previous_paste">
+  <dt>Paste Entry</dt>
+  <dd>Format: ${lexer_name}</dd>
+  <dd>${paste}</dd>
+</dl>
+
+</div>

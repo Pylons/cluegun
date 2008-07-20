@@ -1,0 +1,23 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+	   xmlns:bfg="http://namespaces.repoze.org/bfg"
+	   i18n_domain="repoze.bfg">
+
+  <include package="repoze.bfg" />
+
+  <bfg:view
+     for=".models.IPasteBin"
+     view=".views.static_view"
+     name="static"
+     />
+
+  <bfg:view
+     for=".models.IPasteBin"
+     view=".views.index_view"
+     />
+
+  <bfg:view
+     for=".models.IPasteEntry"
+     view=".views.entry_view"
+     />
+
+</configure>
