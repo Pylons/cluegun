@@ -60,7 +60,12 @@ class RootFinder:
             root['cluegun.pastebin'] = PasteBin()
         return root['cluegun.pastebin']
     
-        
+def NonPersistentRootFinder(db_path):
+    bin = PasteBin()
+    def get_root(environ):
+        return bin
+    return get_root
+
             
         
         
