@@ -135,7 +135,7 @@ def index_view(context, request):
     for name, aliases, filetypes, mimetypes_ in all:
         selected = False
         if language == aliases[0]:
-            selected = True
+            selected = 'selected'
         our_lexers.append({'selected':selected, 'alias':aliases[0],
                            'name':name})
 

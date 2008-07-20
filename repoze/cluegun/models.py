@@ -1,4 +1,8 @@
 from datetime import datetime
+from persistent.mapping import PersistentMapping
+from persistent import Persistent
+from ZODB.DB import DB
+from ZODB.FileStorage.FileStorage import FileStorage
 
 from zope.interface import Interface
 from zope.interface import implements
@@ -7,7 +11,7 @@ from zope.location.interfaces import ILocation
 class IPasteBin(Interface):
     pass
 
-class PasteBin(dict):
+class PasteBin(PersistentMapping):
     implements(IPasteBin, ILocation)
 
     current_id = -1
@@ -22,7 +26,7 @@ class PasteBin(dict):
 class IPasteEntry(Interface):
     pass
 
-class PasteEntry(object):
+class PasteEntry(Persistent):
     implements(IPasteEntry)
 
     def __init__(self, author_name, paste, language):
@@ -31,8 +35,32 @@ class PasteEntry(object):
         self.language = language
         self.date = datetime.now()
 
-root = PasteBin()
+class RootFinder:
+    db = None
+    def __init__(self, db_file):
+        self.db_file = db_file
 
-def get_root(environ):
-    return root
+    def add_closer(self, environ, conn):
+        class Closer:
+            def __init__(self, conn):
+                self.conn = conn
+            def __del__(self):
+                self.conn.close()
+        closer = Closer(conn)
+        environ['cluebin.closer'] = closer
 
+    def __call__(self, environ):
+        if self.db is None:
+            storage = FileStorage(self.db_file)
+            db = DB(storage)
+            self.db = db
+        conn = self.db.open()
+        root = conn.root()
+        if not root.has_key('cluegun.pastebin'):
+            root['cluegun.pastebin'] = PasteBin()
+        return root['cluegun.pastebin']
+    
+        
+            
+        
+        

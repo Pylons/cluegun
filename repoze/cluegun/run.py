@@ -1,7 +1,10 @@
-def make_app(global_config, **kw):
+def make_app(global_config, db_path=None):
     # paster app config callback
     from repoze.bfg import make_app
-    from repoze.cluegun.models import get_root
+    from repoze.cluegun.models import RootFinder
+    if db_path is None:
+        raise ValueError('db_path must not be None')
+    get_root = RootFinder(db_path)
     import repoze.cluegun
     app = make_app(get_root, repoze.cluegun)
     return app

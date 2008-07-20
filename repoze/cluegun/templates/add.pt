@@ -11,9 +11,9 @@
     <div class="field">
       <label for="language">Language</label>
       <select name="language">
-        <option value="">-- Auto detect --</option>
+        <option value="" selected="selected">-- Auto detect --</option>
         <option tal:repeat="lexer lexers"
-           value="${lexer.alias}" selected="${lexer.selected}"
+           value="${lexer.alias}" 
                   >${lexer.name}</option>
       </select>
     </div>
