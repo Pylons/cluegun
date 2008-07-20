@@ -12,38 +12,24 @@
          href="http://repoze.org" >Agendaless Consulting</a> (based on ClueBin by <a
          href="http://www.serverzen.com">ServerZen Software</a>).
       </div>
+
       <div class="message" tal:condition="message|nothing"
            tal:content="message">Error message</div>
 
       <div class="left">
-
-        <form action="." method="POST">
-          <input type="hidden" name="form.submitted"/>
-          <fieldset>
-            <legend>Paste Info</legend>
-            <div class="field">
-              <label for="author_name">Name</label>
-              <input type="text" name="author_name" value="${author_name}" />
-            </div>
-            <div class="field">
-              <label for="language">Language</label>
-              <select name="language">
-                <option value="" selected="selected">-- Auto detect --</option>
-                <option tal:repeat="lexer lexers"
-                        value="${lexer.alias}" 
-                        >${lexer.name}</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="paste">Paste Text</label>
-              <textarea name="paste">${paste}</textarea>
-            </div>
-            <input type="submit" />
-          </fieldset>
-        </form>
+        
+        <style tal:content="style_defs"></style>
+        
+        <a href="..">Main page</a>
+        
+        <dl class="previous_paste">
+          <dt>Paste Entry</dt>
+          <dd>Format: ${lexer_name}</dd>
+          <dd>${paste}</dd>
+        </dl>
 
       </div>
-
+        
       <div class="right" tal:condition="pastes">
         <fieldset>
           <legend>Previous Pastes</legend>
@@ -55,7 +41,7 @@
           </ul>
         </fieldset>
       </div>
-      
+
       <div class="clear">
 
       </div>

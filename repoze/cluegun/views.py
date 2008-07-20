@@ -47,6 +47,10 @@ def get_pastes(context, request):
         pastes.append(new)
     return pastes
 
+formatter = formatters.HtmlFormatter(linenos=True,
+                                     cssclass="source")
+style_defs = formatter.get_style_defs()
+
 def entry_view(context, request):
     paste = context.paste or u''
     try:
@@ -58,21 +62,17 @@ def entry_view(context, request):
     except util.ClassNotFound, err:
         # couldn't guess lexer
         l = lexers.TextLexer()
-    formatter = formatters.HtmlFormatter(linenos=True,
-                                         cssclass="source")
+
     formatted_paste = pygments.highlight(paste, l, formatter)
     pastes = get_pastes(context, request)
 
-    inner = render_template('templates/view.pt',
-                            style_defs=formatter.get_style_defs(),
-                            lexer_name=l.name,
-                            paste=formatted_paste,
-                            pastes=pastes)
-
     return render_template_to_response(
-        'templates/index.pt',
+        'templates/entry.pt',
+        style_defs = style_defs,
+        lexer_name = l.name,
+        paste = formatted_paste,
+        pastes = pastes,
         version = app_version,
-        body = inner,
         message = None,
         application_url = request.application_url,
         )
@@ -94,6 +94,9 @@ def preferred_author(request):
 class PasteAddSchema(formencode.Schema):
     allow_extra_fields = True
     paste = formencode.validators.NotEmpty()
+
+all_lexers = list(lexers.get_all_lexers())
+all_lexers.sort()
 
 def index_view(context, request):
     params = request.params
@@ -129,10 +132,8 @@ def index_view(context, request):
             response.status = '301 Moved Permanently'
             response.headers['Location'] = '/%s' % pasteid
 
-    all = list(lexers.get_all_lexers())
-    all.sort()
     our_lexers = []
-    for name, aliases, filetypes, mimetypes_ in all:
+    for name, aliases, filetypes, mimetypes_ in all_lexers:
         selected = False
         if language == aliases[0]:
             selected = 'selected'
@@ -141,14 +142,12 @@ def index_view(context, request):
 
     pastes = get_pastes(context, request)
 
-    formadd =  render_template('templates/add.pt', author_name=author_name,
-                               paste=paste, lexers=our_lexers,
-                               pastes=pastes)
-
     body = render_template(
         'templates/index.pt',
+        author_name = author_name,
+        paste = paste,
+        lexers = our_lexers,
         version = app_version,
-        body = formadd,
         message = message,
         pastes = pastes,
         application_url = request.application_url,
