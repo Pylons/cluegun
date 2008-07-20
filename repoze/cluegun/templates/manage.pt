@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <head>
+    <title>ClueGun pastebin management</title>
+    <link rel="stylesheet" type="text/css"
+          href="${application_url}/static/styles.css" />
+  </head>
+  <body>
+    <div id="main">
+
+      <div class="header">ClueGun ${version} by <a
+         href="http://repoze.org" >Agendaless Consulting</a> (based on ClueBin by <a
+         href="http://www.serverzen.com">ServerZen Software</a>).
+      </div>
+
+        <a href="..">Main page</a>
+        
+
+      <div class="left" tal:condition="pastes">
+
+        <fieldset>
+          <legend>Delete Pastes</legend>
+          <form action="${application_url}/manage" method="POST">
+            <ul>
+              <li tal:repeat="paste pastes">
+                <input type="checkbox" name="delete:list" 
+                   value="${paste.name}"/>
+                <a href="${paste.url}"
+                   >By: ${paste.author} on ${paste.date}</a>
+              </li>
+            </ul>
+            <input type="submit" name="form.submitted" value="Delete"/>
+          </form>
+        </fieldset>
+      </div>
+
+      <div class="clear">
+
+      </div>
+    </div>
+  </body>
+</html>

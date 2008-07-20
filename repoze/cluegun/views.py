@@ -11,11 +11,13 @@ from pygments import lexers
 from pygments import formatters
 from pygments import util
 
-
 from repoze.bfg.wsgi import wsgiapp
 from repoze.bfg.template import render_template_to_response
 from repoze.bfg.template import render_template
 from repoze.bfg.traversal import find_interface
+from repoze.bfg.security import authenticated_userid
+from repoze.bfg.security import has_permission
+from repoze.monty import marshal
 
 from repoze.cluegun.models import PasteEntry
 from repoze.cluegun.models import IPasteBin
@@ -43,7 +45,8 @@ def get_pastes(context, request):
         else:
             pdate = 'UNKNOWN'
         paste_url = urlparse.urljoin(app_url, name)
-        new = {'author':entry.author_name, 'date':pdate, 'url':paste_url}
+        new = {'author':entry.author_name, 'date':pdate, 'url':paste_url,
+               'name':name}
         pastes.append(new)
     return pastes
 
@@ -103,6 +106,8 @@ def index_view(context, request):
     message = u''
     response = webob.Response()
     app_url = request.application_url
+    user = authenticated_userid(request)
+    can_manage = has_permission('manage', context, request)
 
     if params.has_key('form.submitted'):
         paste = request.params.get('paste', '')
@@ -141,9 +146,41 @@ def index_view(context, request):
         message = message,
         pastes = pastes,
         application_url = app_url,
+        user = user,
+        can_manage = can_manage,
         )
     response.unicode_body = unicode(body)
     return response
 
-        
+def manage_view(context, request):
+    params = request.params
+    message = u''
+    response = webob.Response()
+    app_url = request.application_url
 
+    if params.has_key('form.submitted'):
+        form = marshal(request.environ, request.body_file)
+        checkboxes = form.get('delete', [])
+        for checkbox in checkboxes:
+            del context[checkbox]
+        message = '%s pastes deleted' % len(checkboxes)
+        response.status = '301 Moved Permanently'
+        response.headers['Location'] = app_url
+
+    pastes = get_pastes(context, request)
+
+    body = render_template(
+        'templates/manage.pt',
+        version = app_version,
+        pastes = pastes,
+        application_url = app_url,
+        )
+    response.unicode_body = unicode(body)
+    return response
+        
+def logout_view(context, request):
+    response = webob.Response()
+    response.status = '401 Unauthorized'
+    return response
+
+    

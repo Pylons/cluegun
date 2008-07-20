@@ -15,6 +15,11 @@
       <div class="message" tal:condition="message|nothing"
            tal:content="message">Error message</div>
 
+      <div class="userinfo" tal:condition="user">
+          You are currently logged in as <b>${user}</b>
+          <a href="${application_url}/logout">Log Out</a>
+      </div>
+
       <div class="left">
 
         <form action="." method="POST">

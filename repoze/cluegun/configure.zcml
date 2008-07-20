@@ -6,18 +6,40 @@
 
   <bfg:view
      for=".models.IPasteBin"
-     view=".views.static_view"
-     name="static"
+     view=".views.index_view"
+     permission="view"
      />
 
   <bfg:view
      for=".models.IPasteBin"
-     view=".views.index_view"
+     view=".views.manage_view"
+     name="manage"
+     permission="manage"
+     />
+
+  <bfg:view
+     for=".models.IPasteBin"
+     view=".views.static_view"
+     name="static"
+     permission="view"
+     />
+
+  <bfg:view
+     for=".models.IPasteBin"
+     view=".views.logout_view"
+     name="logout"
+     permission="view"
      />
 
   <bfg:view
      for=".models.IPasteEntry"
      view=".views.entry_view"
+     permission="view"
      />
+
+  <utility
+    provides="repoze.bfg.interfaces.ISecurityPolicy"
+    factory="repoze.bfg.security.RemoteUserACLSecurityPolicy"
+    />
 
 </configure>

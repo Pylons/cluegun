@@ -8,11 +8,15 @@ from zope.interface import Interface
 from zope.interface import implements
 from zope.location.interfaces import ILocation
 
+from repoze.bfg.security import Allow
+from repoze.bfg.security import Everyone
+
 class IPasteBin(Interface):
     pass
 
 class PasteBin(PersistentMapping):
     implements(IPasteBin, ILocation)
+    __acl__ = [ (Allow, Everyone, 'view'), (Allow, 'manager', 'manage') ]
 
     current_id = -1
 
