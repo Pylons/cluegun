@@ -77,6 +77,8 @@ def entry_view(context, request):
 
     return render_template_to_response(
         'templates/entry.pt',
+        author = context.author_name,
+        date = context.date.strftime('%x at %X'),
         style_defs = style_defs,
         lexer_name = l.name,
         paste = formatted_paste,

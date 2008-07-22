@@ -24,6 +24,8 @@
         
         <dl class="previous_paste">
           <dt>Paste Entry</dt>
+          <dd>Author: ${author}</dd>
+          <dd>Date: ${date}</dd>
           <dd>Format: ${lexer_name}</dd>
           <dd>${paste}</dd>
         </dl>
@@ -36,7 +38,7 @@
           <ul>
             <li tal:repeat="paste pastes">
               <a href="${paste.url}"
-                 >By: ${paste.author} on ${paste.date}</a>
+                 >${paste.author} on ${paste.date}</a>
             </li>
           </ul>
         </fieldset>

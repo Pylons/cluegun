@@ -55,7 +55,7 @@
           <ul>
             <li tal:repeat="paste pastes">
               <a href="${paste.url}"
-                 >By: ${paste.author} on ${paste.date}</a>
+                 >${paste.author} on ${paste.date}</a>
             </li>
           </ul>
         </fieldset>
