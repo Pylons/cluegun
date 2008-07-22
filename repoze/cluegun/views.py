@@ -1,4 +1,5 @@
 import os
+import sys
 import urlparse
 
 import formencode
@@ -35,11 +36,16 @@ static = urlparser.StaticURLParser(os.path.join(here, 'static', '..'))
 def static_view(environ, start_response):
     return static(environ, start_response)
 
-def get_pastes(context, request):
+def get_pastes(context, request, max):
     pastebin = find_interface(context, IPasteBin)
     pastes = []
     app_url = request.application_url
-    for name, entry in pastebin.items():
+    keys = pastebin.keys()
+    keys.sort()
+    keys.reverse()
+    keys = keys[:max]
+    for name in keys:
+        entry = pastebin[name]
         if entry.date is not None:
             pdate = entry.date.strftime('%x at %X')
         else:
@@ -67,7 +73,7 @@ def entry_view(context, request):
         l = lexers.TextLexer()
 
     formatted_paste = pygments.highlight(paste, l, formatter)
-    pastes = get_pastes(context, request)
+    pastes = get_pastes(context, request, 10)
 
     return render_template_to_response(
         'templates/entry.pt',
@@ -135,7 +141,7 @@ def index_view(context, request):
             response.status = '301 Moved Permanently'
             response.headers['Location'] = '%s/%s' % (app_url, pasteid)
 
-    pastes = get_pastes(context, request)
+    pastes = get_pastes(context, request, 10)
 
     body = render_template(
         'templates/index.pt',
@@ -167,7 +173,7 @@ def manage_view(context, request):
         response.status = '301 Moved Permanently'
         response.headers['Location'] = app_url
 
-    pastes = get_pastes(context, request)
+    pastes = get_pastes(context, request, sys.maxint)
 
     body = render_template(
         'templates/manage.pt',
