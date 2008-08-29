@@ -1,6 +1,6 @@
 def make_app(global_config, db_path=None):
     # paster app config callback
-    from repoze.bfg import make_app
+    from repoze.bfg.router import make_app
     from repoze.cluegun.models import PersistentRootFinder as finder
     if db_path is None:
         raise ValueError('db_path must not be None')
