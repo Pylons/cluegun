@@ -2,7 +2,7 @@
 	   xmlns:bfg="http://namespaces.repoze.org/bfg"
 	   i18n_domain="repoze.bfg">
 
-  <include package="repoze.bfg" />
+  <include package="repoze.bfg.includes" />
 
   <bfg:view
      for=".models.IPasteBin"
