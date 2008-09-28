@@ -6,7 +6,7 @@ from ZODB.FileStorage.FileStorage import FileStorage
 
 from zope.interface import Interface
 from zope.interface import implements
-from zope.location.interfaces import ILocation
+from repoze.bfg.interfaces import ILocation
 
 from repoze.bfg.security import Allow
 from repoze.bfg.security import Everyone
