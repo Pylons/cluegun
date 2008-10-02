@@ -59,12 +59,17 @@ class PersistentRootFinder:
             storage = FileStorage(self.db_file)
             db = DB(storage)
             self.db = db
+
         conn = self.db.open()
         root = conn.root()
+
+        # hook in closer
+        self.add_closer(environ,conn)
+
         if not root.has_key('cluegun.pastebin'):
             root['cluegun.pastebin'] = PasteBin()
         return root['cluegun.pastebin']
-    
+
 def NonPersistentRootFinder(db_path):
     bin = PasteBin()
     def get_root(environ):
