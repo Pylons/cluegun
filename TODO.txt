@@ -1,1 +1,5 @@
-List todo items here.
+repoze.cluegun TODOs
+====================
+
+- [_] Add support for notifying an IRC channel (or channels) when a new
+      paste is added.
