@@ -13,8 +13,8 @@ from pygments import formatters
 from pygments import util
 
 from repoze.bfg.wsgi import wsgiapp
-from repoze.bfg.template import render_template_to_response
-from repoze.bfg.template import render_template
+from repoze.bfg.chameleon_zpt import render_template_to_response
+from repoze.bfg.chameleon_zpt import render_template
 from repoze.bfg.traversal import find_interface
 from repoze.bfg.security import authenticated_userid
 from repoze.bfg.security import has_permission
