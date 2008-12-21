@@ -23,6 +23,18 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
+requires = [
+    'repoze.bfg',
+    'repoze.tm2',
+    'repoze.monty',
+    'repoze.who',
+    'ZODB3',
+    'Pygments',
+    'FormEncode',
+    'zope.security',
+    'nose',
+    ]
+
 def get_version():
     try:
         here = os.path.abspath(os.path.dirname(__file__))
@@ -54,25 +66,9 @@ setup(name='repoze.cluegun',
       include_package_data=True,
       namespace_packages=['repoze'],
       zip_safe=False,
-      tests_require = [
-          'repoze.bfg',
-          'repoze.tm2',
-          'repoze.monty',
-          'repoze.who',
-          'ZODB3',
-          'Pygments',
-          'FormEncode',
-      ],
-      install_requires=[
-          'repoze.bfg',
-          'repoze.tm2',
-          'repoze.monty',
-          'repoze.who',
-          'ZODB3',
-          'Pygments',
-          'FormEncode',
-      ],
-      test_suite="repoze.cluegun.tests.test_suite",
+      tests_require = requires,
+      install_requires= requires,
+      test_suite="nose.collector",
       entry_points = """\
       [paste.app_factory]
       make_app = repoze.cluegun.run:make_app

@@ -1,3 +1,7 @@
+Next release
+
+  Forward compatibility with upcoming BFG releases.
+
 0.1
 
   Initial release.
