@@ -33,6 +33,7 @@ requires = [
     'FormEncode',
     'zope.security',
     'nose',
+    'repoze.zodbconn',
     ]
 
 def get_version():

@@ -39,36 +39,13 @@ class PasteEntry(Persistent):
         self.paste = paste
         self.language = language
         self.date = datetime.now()
-
-class PersistentRootFinder:
-    db = None
-    def __init__(self, db_file):
-        self.db_file = db_file
-
-    def add_closer(self, environ, conn):
-        class Closer:
-            def __init__(self, conn):
-                self.conn = conn
-            def __del__(self):
-                self.conn.close()
-        closer = Closer(conn)
-        environ['cluebin.closer'] = closer
-
-    def __call__(self, environ):
-        if self.db is None:
-            storage = FileStorage(self.db_file)
-            db = DB(storage)
-            self.db = db
-
-        conn = self.db.open()
-        root = conn.root()
-
-        # hook in closer
-        self.add_closer(environ,conn)
-
-        if not root.has_key('cluegun.pastebin'):
-            root['cluegun.pastebin'] = PasteBin()
-        return root['cluegun.pastebin']
+        
+def appmaker(root):
+    if not root.has_key('cluegun.pastebin'):
+        root['cluegun.pastebin'] = PasteBin()
+        import transaction
+        transaction.commit()
+    return root['cluegun.pastebin']
 
 def NonPersistentRootFinder(db_path):
     bin = PasteBin()
