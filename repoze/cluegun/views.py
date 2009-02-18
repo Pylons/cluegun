@@ -41,7 +41,12 @@ def get_pastes(context, request, max):
     pastes = []
     app_url = request.application_url
     keys = pastebin.keys()
-    keys.sort()
+    def byint(a, b):
+        try:
+            return cmp(int(a), int(b))
+        except TypeError:
+            return cmp(a, b)
+    keys.sort(byint)
     keys.reverse()
     keys = keys[:max]
     for name in keys:

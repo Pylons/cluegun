@@ -1,8 +1,6 @@
 from datetime import datetime
 from persistent.mapping import PersistentMapping
 from persistent import Persistent
-from ZODB.DB import DB
-from ZODB.FileStorage.FileStorage import FileStorage
 
 from zope.interface import Interface
 from zope.interface import implements
