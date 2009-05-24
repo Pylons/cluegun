@@ -1,38 +1,36 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-	   xmlns:bfg="http://namespaces.repoze.org/bfg"
+<configure xmlns="http://namespaces.repoze.org/bfg"
 	   i18n_domain="repoze.bfg">
 
-  <include package="zope.component" file="meta.zcml"/>
   <include package="repoze.bfg.includes" />
 
-  <bfg:view
+  <view
      for=".models.IPasteBin"
      view=".views.index_view"
      permission="view"
      />
 
-  <bfg:view
+  <view
      for=".models.IPasteBin"
      view=".views.manage_view"
      name="manage"
      permission="manage"
      />
 
-  <bfg:view
+  <view
      for=".models.IPasteBin"
      view=".views.static_view"
      name="static"
      permission="view"
      />
 
-  <bfg:view
+  <view
      for=".models.IPasteBin"
      view=".views.logout_view"
      name="logout"
      permission="view"
      />
 
-  <bfg:view
+  <view
      for=".models.IPasteEntry"
      view=".views.entry_view"
      permission="view"

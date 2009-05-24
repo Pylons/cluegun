@@ -31,22 +31,14 @@ requires = [
     'ZODB3',
     'Pygments',
     'FormEncode',
-    'zope.security',
     'nose',
     'repoze.zodbconn',
     ]
 
-def get_version():
-    try:
-        here = os.path.abspath(os.path.dirname(__file__))
-    except NameError:
-        here = os.path.abspath(os.getcwd())
-    f = os.path.join(here, 'repoze', 'cluegun', 'VERSION.txt')
-    version = open(f).readline().strip()
-    return version
+__version__ = '0.3dev'
 
 setup(name='repoze.cluegun',
-      version=get_version(),
+      version=__version__,
       description='A pastebin implementation based on ClueBin using repoze.bfg',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
