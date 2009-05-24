@@ -22,9 +22,8 @@ from repoze.monty import marshal
 
 from repoze.cluegun.models import PasteEntry
 from repoze.cluegun.models import IPasteBin
-from repoze.cluegun.version import get_version
 
-app_version = get_version()
+app_version = '0.3dev'
 
 COOKIE_LANGUAGE = 'cluebin.last_lang'
 COOKIE_AUTHOR = 'cluebin.last_author'
