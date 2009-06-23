@@ -36,9 +36,4 @@
      permission="view"
      />
 
-  <utility
-    provides="repoze.bfg.interfaces.ISecurityPolicy"
-    factory="repoze.bfg.security.RemoteUserACLSecurityPolicy"
-    />
-
 </configure>

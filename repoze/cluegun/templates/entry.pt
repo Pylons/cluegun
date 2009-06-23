@@ -27,7 +27,7 @@
           <dd>Author: ${author}</dd>
           <dd>Date: ${date}</dd>
           <dd>Format: ${lexer_name}</dd>
-          <dd>${paste}</dd>
+          <dd tal:content="structure paste">paste</dd>
         </dl>
 
       </div>

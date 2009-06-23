@@ -39,7 +39,7 @@ def get_pastes(context, request, max):
     pastebin = find_interface(context, IPasteBin)
     pastes = []
     app_url = request.application_url
-    keys = pastebin.keys()
+    keys = list(pastebin.keys())
     def byint(a, b):
         try:
             return cmp(int(a), int(b))

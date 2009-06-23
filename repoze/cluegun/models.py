@@ -10,10 +10,12 @@ from repoze.bfg.security import Allow
 from repoze.bfg.security import Everyone
 from repoze.bfg.security import Authenticated
 
+from repoze.folder import Folder
+
 class IPasteBin(Interface):
     pass
 
-class PasteBin(PersistentMapping):
+class PasteBin(Folder):
     implements(IPasteBin, ILocation)
     __acl__ = [ (Allow, Everyone, 'view'), (Allow, Authenticated, 'manage') ]
 

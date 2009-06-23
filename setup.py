@@ -33,6 +33,7 @@ requires = [
     'FormEncode',
     'nose',
     'repoze.zodbconn',
+    'repoze.folder',
     ]
 
 __version__ = '0.3dev'

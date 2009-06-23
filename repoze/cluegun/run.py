@@ -1,3 +1,5 @@
+from repoze.bfg.authentication import RepozeWho1AuthenticationPolicy
+
 def make_app(global_config, **kw):
     # paster app config callback
     from repoze.bfg.router import make_app
@@ -8,7 +10,10 @@ def make_app(global_config, **kw):
     from repoze.zodbconn.finder import PersistentApplicationFinder
     finder = PersistentApplicationFinder('file://%s' % db_path, appmaker)
     import repoze.cluegun
-    app = make_app(finder, repoze.cluegun, options=kw)
+    app = make_app(finder,
+                   repoze.cluegun,
+                   authentication_policy=RepozeWho1AuthenticationPolicy(),
+                   options=kw)
     return app
 
 if __name__ == '__main__':
