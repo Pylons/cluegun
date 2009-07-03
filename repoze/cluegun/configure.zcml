@@ -36,4 +36,8 @@
      permission="view"
      />
 
+  <repozewho1authenticationpolicy/>
+
+  <aclauthorizationpolicy/>
+
 </configure>
