@@ -1,10 +1,5 @@
 from datetime import datetime
-from persistent.mapping import PersistentMapping
 from persistent import Persistent
-
-from zope.interface import Interface
-from zope.interface import implements
-from repoze.bfg.interfaces import ILocation
 
 from repoze.bfg.security import Allow
 from repoze.bfg.security import Everyone
@@ -12,11 +7,7 @@ from repoze.bfg.security import Authenticated
 
 from repoze.folder import Folder
 
-class IPasteBin(Interface):
-    pass
-
 class PasteBin(Folder):
-    implements(IPasteBin, ILocation)
     __acl__ = [ (Allow, Everyone, 'view'), (Allow, Authenticated, 'manage') ]
 
     current_id = -1
@@ -28,12 +19,7 @@ class PasteBin(Folder):
         self[pasteid] = paste
         return pasteid
 
-class IPasteEntry(Interface):
-    pass
-
 class PasteEntry(Persistent):
-    implements(IPasteEntry)
-
     def __init__(self, author_name, paste, language):
         self.author_name = author_name
         self.paste = paste

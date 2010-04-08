@@ -4,36 +4,37 @@
   <include package="repoze.bfg.includes" />
 
   <view
-     for=".models.IPasteBin"
+     context=".models.PasteBin"
      view=".views.index_view"
      permission="view"
+     renderer="templates/index.pt"
      />
 
   <view
-     for=".models.IPasteBin"
+     context=".models.PasteBin"
      view=".views.manage_view"
      name="manage"
      permission="manage"
+     renderer="templates/manage.pt"
      />
 
   <view
-     for=".models.IPasteBin"
-     view=".views.static_view"
-     name="static"
+     context=".models.PasteEntry"
+     view=".views.entry_view"
      permission="view"
+     renderer="templates/entry.pt"
      />
 
   <view
-     for=".models.IPasteBin"
+     context=".models.PasteBin"
      view=".views.logout_view"
      name="logout"
      permission="view"
      />
 
-  <view
-     for=".models.IPasteEntry"
-     view=".views.entry_view"
-     permission="view"
+  <static
+     name="static"
+     path="static"
      />
 
   <repozewho1authenticationpolicy/>

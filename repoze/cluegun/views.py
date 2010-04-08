@@ -1,42 +1,30 @@
-import os
 import sys
 import urlparse
 
 import formencode
 import webob
-
-from paste import urlparser
+from webob.exc import HTTPFound
 
 import pygments
 from pygments import lexers
 from pygments import formatters
 from pygments import util
 
-from repoze.bfg.wsgi import wsgiapp
-from repoze.bfg.chameleon_zpt import render_template_to_response
-from repoze.bfg.chameleon_zpt import render_template
 from repoze.bfg.traversal import find_interface
 from repoze.bfg.security import authenticated_userid
 from repoze.bfg.security import has_permission
 from repoze.monty import marshal
 
 from repoze.cluegun.models import PasteEntry
-from repoze.cluegun.models import IPasteBin
+from repoze.cluegun.models import PasteBin
 
 app_version = '0.3dev'
 
 COOKIE_LANGUAGE = 'cluebin.last_lang'
 COOKIE_AUTHOR = 'cluebin.last_author'
 
-here = os.path.abspath(os.path.dirname(__file__))
-static = urlparser.StaticURLParser(os.path.join(here, 'static', '..'))
-
-@wsgiapp
-def static_view(environ, start_response):
-    return static(environ, start_response)
-
 def get_pastes(context, request, max):
-    pastebin = find_interface(context, IPasteBin)
+    pastebin = find_interface(context, PasteBin)
     pastes = []
     app_url = request.application_url
     keys = list(pastebin.keys())
@@ -71,16 +59,15 @@ def entry_view(context, request):
             l = lexers.get_lexer_by_name(context.language)
         else:
             l = lexers.guess_lexer(context.paste)
-        language = l.aliases[0]
-    except util.ClassNotFound, err:
+        l.aliases[0]
+    except util.ClassNotFound:
         # couldn't guess lexer
         l = lexers.TextLexer()
 
     formatted_paste = pygments.highlight(paste, l, formatter)
     pastes = get_pastes(context, request, 10)
 
-    return render_template_to_response(
-        'templates/entry.pt',
+    return dict(
         author = context.author_name,
         date = context.date.strftime('%x at %X'),
         style_defs = style_defs,
@@ -116,7 +103,6 @@ def index_view(context, request):
     language = u''
     paste = u''
     message = u''
-    response = webob.Response()
     app_url = request.application_url
     user = authenticated_userid(request)
     can_manage = has_permission('manage', context, request)
@@ -128,10 +114,11 @@ def index_view(context, request):
         schema = PasteAddSchema()
         message = None
         try:
-            form = schema.to_python(request.params)
+            schema.to_python(request.params)
         except formencode.validators.Invalid, why:
             message = str(why)
         else:
+            response = webob.Response()
             response.set_cookie(COOKIE_AUTHOR, author_name)
             response.set_cookie(COOKIE_LANGUAGE, language)
 
@@ -144,13 +131,11 @@ def index_view(context, request):
 
             pobj = PasteEntry(author_name, paste, language)
             pasteid = context.add_paste(pobj)
-            response.status = '301 Moved Permanently'
-            response.headers['Location'] = '%s/%s' % (app_url, pasteid)
+            return HTTPFound(location='%s/%s' % (app_url, pasteid))
 
     pastes = get_pastes(context, request, 10)
 
-    body = render_template(
-        'templates/index.pt',
+    return dict(
         author_name = author_name,
         paste = paste,
         lexers = lexer_info,
@@ -161,13 +146,9 @@ def index_view(context, request):
         user = user,
         can_manage = can_manage,
         )
-    response.unicode_body = unicode(body)
-    return response
 
 def manage_view(context, request):
     params = request.params
-    message = u''
-    response = webob.Response()
     app_url = request.application_url
 
     if params.has_key('form.submitted'):
@@ -175,20 +156,15 @@ def manage_view(context, request):
         checkboxes = form.get('delete', [])
         for checkbox in checkboxes:
             del context[checkbox]
-        message = '%s pastes deleted' % len(checkboxes)
-        response.status = '301 Moved Permanently'
-        response.headers['Location'] = app_url
+        return HTTPFound(location=app_url)
 
     pastes = get_pastes(context, request, sys.maxint)
 
-    body = render_template(
-        'templates/manage.pt',
+    return dict(
         version = app_version,
         pastes = pastes,
         application_url = app_url,
         )
-    response.unicode_body = unicode(body)
-    return response
         
 def logout_view(context, request):
     response = webob.Response()
