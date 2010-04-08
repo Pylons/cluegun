@@ -27,7 +27,7 @@ requires = [
     'repoze.bfg',
     'repoze.tm2',
     'repoze.monty',
-    'repoze.who<=1.99',
+    'repoze.who>=2.0a1',
     'ZODB3',
     'Pygments',
     'FormEncode',
