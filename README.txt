@@ -1,3 +1,4 @@
-An implementation of Rocky Burt's ClueBin based on ``repoze.bfg``.
+An implementation of Rocky Burt's ClueBin based on Pyramid.
+
 
 

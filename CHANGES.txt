@@ -1,8 +1,4 @@
 Next release
+------------
 
-  Forward compatibility with upcoming BFG releases.
-
-0.1
-
-  Initial release.
-
+- Forked from repoze.cluebin after 0.1.

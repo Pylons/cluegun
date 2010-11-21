@@ -1,9 +1,9 @@
 from datetime import datetime
 from persistent import Persistent
 
-from repoze.bfg.security import Allow
-from repoze.bfg.security import Everyone
-from repoze.bfg.security import Authenticated
+from pyramid.security import Allow
+from pyramid.security import Everyone
+from pyramid.security import Authenticated
 
 from repoze.folder import Folder
 

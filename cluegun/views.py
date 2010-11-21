@@ -10,15 +10,15 @@ from pygments import lexers
 from pygments import formatters
 from pygments import util
 
-from repoze.bfg.traversal import find_interface
-from repoze.bfg.security import authenticated_userid
-from repoze.bfg.security import has_permission
+from pyramid.traversal import find_interface
+from pyramid.security import authenticated_userid
+from pyramid.security import has_permission
 from repoze.monty import marshal
 
-from repoze.cluegun.models import PasteEntry
-from repoze.cluegun.models import PasteBin
+from cluegun.models import PasteEntry
+from cluegun.models import PasteBin
 
-app_version = '0.3dev'
+app_version = '0.0'
 
 COOKIE_LANGUAGE = 'cluebin.last_lang'
 COOKIE_AUTHOR = 'cluebin.last_author'

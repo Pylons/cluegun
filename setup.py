@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Agendaless Consulting and Contributors.
+# Copyright (c) 2010 Agendaless Consulting and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the BSD-like license at
@@ -21,7 +21,7 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'repoze.bfg',
+    'pyramid',
     'repoze.tm2',
     'repoze.monty',
     'repoze.who>=2.0a1',
@@ -34,36 +34,35 @@ requires = [
     'repoze.folder',
     ]
 
-__version__ = '0.3dev'
+__version__ = '0.0'
 
-setup(name='repoze.cluegun',
+setup(name='cluegun',
       version=__version__,
-      description='A pastebin implementation based on ClueBin using repoze.bfg',
+      description='A Pyramid sample application: pastebin (based on ClueBin)',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
-        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Programming Language :: Python",
+        "Framework :: Pylons",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Internet :: WWW/HTTP :: WSGI",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         ],
-      keywords='cluebin repoze bfg wsgi',
+      keywords='cluebin pyramid pylons',
       author="Agendaless Consulting",
-      author_email="repoze-dev@lists.repoze.org",
+      author_email="pylons-devel@googlegroups.com",
       url="http://www.repoze.org",
       license="BSD-derived (http://www.repoze.org/LICENSE.txt)",
       packages=find_packages(),
       include_package_data=True,
-      namespace_packages=['repoze'],
       zip_safe=False,
       tests_require = requires,
       install_requires= requires,
-      test_suite="repoze.cluegun.tests",
+      test_suite="cluegun.tests",
       entry_points = """\
       [paste.app_factory]
-      make_app = repoze.cluegun.run:make_app
+      main = cluegun:main
       """
       )
 
