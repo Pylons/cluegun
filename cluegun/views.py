@@ -1,8 +1,8 @@
 import sys
 import urlparse
 
-import formencode
 import webob
+import formencode
 from webob.exc import HTTPFound
 
 import pygments
@@ -13,6 +13,12 @@ from pygments import util
 from pyramid.traversal import find_interface
 from pyramid.security import authenticated_userid
 from pyramid.security import has_permission
+from pyramid.security import remember
+from pyramid.security import forget
+from pyramid.exceptions import Forbidden
+
+from pyramid.view import view_config
+
 from repoze.monty import marshal
 
 from cluegun.models import PasteEntry
@@ -52,6 +58,8 @@ formatter = formatters.HtmlFormatter(linenos=True,
                                      cssclass="source")
 style_defs = formatter.get_style_defs()
 
+@view_config(context=PasteEntry, permission='view',
+             renderer='templates/entry.pt')
 def entry_view(context, request):
     paste = context.paste or u''
     try:
@@ -97,6 +105,7 @@ class PasteAddSchema(formencode.Schema):
     allow_extra_fields = True
     paste = formencode.validators.NotEmpty()
 
+@view_config(context=PasteBin, permission='view', renderer='templates/index.pt')
 def index_view(context, request):
     params = request.params
     author_name = preferred_author(request)
@@ -147,6 +156,8 @@ def index_view(context, request):
         can_manage = can_manage,
         )
 
+@view_config(name='manage', context=PasteBin, permission='manage',
+             renderer='templates/manage.pt')
 def manage_view(context, request):
     params = request.params
     app_url = request.application_url
@@ -166,9 +177,51 @@ def manage_view(context, request):
         application_url = app_url,
         )
         
-def logout_view(context, request):
-    response = webob.Response()
-    response.status = '401 Unauthorized'
-    return response
+def check_passwd(passwd_file, login, password):
+    usersf = open(passwd_file, 'r')
+    for line in usersf:
+        try:
+            username, hashed = line.rstrip().split(':', 1)
+        except ValueError:
+            continue
+        if username == login:
+            if password == hashed:
+                return username
+    return None
 
+@view_config(context=Forbidden, renderer='templates/login.pt')
+@view_config(context=PasteBin, name='login', renderer='templates/login.pt')
+def login(request):
+    login_url = request.model_url(request.context, 'login')
+    referrer = request.url
+    if referrer == login_url:
+        referrer = '/' # never use the login form itself as came_from
+    came_from = request.params.get('came_from', referrer)
+    message = ''
+    login = ''
+    password = ''
+    if 'form.submitted' in request.params:
+        login = request.params['login']
+        password = request.params['password']
+        password_file = request.registry.settings['password_file']
+        if check_passwd(password_file, login, password):
+            headers = remember(request, login)
+            return HTTPFound(location = came_from,
+                             headers = headers)
+        message = 'Failed login'
+
+    return dict(
+        message = message,
+        url = request.application_url + '/login',
+        came_from = came_from,
+        login = login,
+        password = password,
+        )
     
+@view_config(name='logout', context=PasteBin, permission='view')
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location = request.model_url(request.context),
+                     headers = headers)
+    
+

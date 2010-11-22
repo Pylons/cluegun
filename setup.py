@@ -24,12 +24,9 @@ requires = [
     'pyramid',
     'repoze.tm2',
     'repoze.monty',
-    'repoze.who>=2.0a1',
-    'repoze.who.deprecatedplugins',
     'ZODB3',
     'Pygments',
     'FormEncode',
-    'nose',
     'repoze.zodbconn',
     'repoze.folder',
     ]
