@@ -109,3 +109,5 @@ class Test_entry_view(unittest.TestCase):
         self.assertEqual(result['lexer_name'], 'Python')
         self.failUnless('abc' in result['paste'])
         self.assertEqual(len(result['pastes']), 1)
+
+# XXX test the remainder of the views
