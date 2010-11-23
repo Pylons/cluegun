@@ -82,3 +82,30 @@ class Test_check_passwd(unittest.TestCase):
         passwd_file = StringIO('fudge\nadmin:admin\n')
         result = self._callFUT(passwd_file, 'admin', 'admin')
         self.assertEqual(result, 'admin')
+
+class Test_entry_view(unittest.TestCase):
+    def _callFUT(self, context, request):
+        from cluegun.views import entry_view
+        return entry_view(context, request)
+
+    def test_it(self):
+        import datetime
+        from cluegun.models import IPasteBin
+        from cluegun.views import app_version
+        now = datetime.datetime.now()
+        pb = testing.DummyModel(__provides__=IPasteBin)
+        entry = testing.DummyModel(language='python',
+                                   author_name='author_name',
+                                   paste='abc',
+                                   date=now,
+                                   __parent__=pb)
+        pb['entry'] = entry
+        request = testing.DummyRequest()
+        result = self._callFUT(entry, request)
+        self.assertEqual(result['application_url'], 'http://example.com')
+        self.assertEqual(result['author'], 'author_name')
+        self.failUnless(result['style_defs'])
+        self.assertEqual(result['version'], app_version)
+        self.assertEqual(result['lexer_name'], 'Python')
+        self.failUnless('abc' in result['paste'])
+        self.assertEqual(len(result['pastes']), 1)
