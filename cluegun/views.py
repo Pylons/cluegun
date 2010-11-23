@@ -23,6 +23,8 @@ from repoze.monty import marshal
 
 from cluegun.models import PasteEntry
 from cluegun.models import PasteBin
+from cluegun.models import IPasteBin
+from cluegun.models import IPasteEntry
 
 app_version = '0.0'
 
@@ -40,7 +42,7 @@ for name, aliases, filetypes, mimetypes_ in all_lexers:
 # utility functions
 
 def get_pastes(context, request, max):
-    pastebin = find_interface(context, PasteBin)
+    pastebin = find_interface(context, IPasteBin)
     pastes = []
     app_url = request.application_url
     keys = list(pastebin.keys())
