@@ -24,12 +24,11 @@ from repoze.monty import marshal
 from cluegun.models import PasteEntry
 from cluegun.models import PasteBin
 from cluegun.models import IPasteBin
-from cluegun.models import IPasteEntry
 
 app_version = '0.0'
 
-COOKIE_LANGUAGE = 'cluebin.last_lang'
-COOKIE_AUTHOR = 'cluebin.last_author'
+COOKIE_LANGUAGE = 'cluegun.last_lang'
+COOKIE_AUTHOR = 'cluegun.last_author'
 
 formatter = formatters.HtmlFormatter(linenos=True, cssclass="source")
 style_defs = formatter.get_style_defs()

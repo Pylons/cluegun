@@ -26,5 +26,36 @@ class Test_get_pastes(unittest.TestCase):
         self.assertEqual(entry['author'], 'author_name')
         self.assertEqual(entry['url'], 'http://example.com/19')
         self.assertEqual(entry['name'], '19')
+
+class Test_preferred_author(unittest.TestCase):
+    def _callFUT(self, request):
+        from cluegun.views import preferred_author
+        return preferred_author(request)
+
+    def test_with_str_author_name_in_params(self):
+        request = testing.DummyRequest()
+        request.params['author_name'] = 'abc'
+        result = self._callFUT(request)
+        self.failUnless(isinstance(result, unicode))
+        self.assertEqual(result, u'abc')
         
+    def test_with_unicode_author_name_in_params(self):
+        request = testing.DummyRequest()
+        request.params['author_name'] = u'abc'
+        result = self._callFUT(request)
+        self.failUnless(isinstance(result, unicode))
+        self.assertEqual(result, u'abc')
         
+    def test_with_str_author_name_in_cookie(self):
+        request = testing.DummyRequest()
+        request.cookies['cluegun.last_author'] = 'abc'
+        result = self._callFUT(request)
+        self.failUnless(isinstance(result, unicode))
+        self.assertEqual(result, u'abc')
+        
+    def test_with_unicode_author_name_in_cookie(self):
+        request = testing.DummyRequest()
+        request.cookies['cluegun.last_author'] = u'abc'
+        result = self._callFUT(request)
+        self.failUnless(isinstance(result, unicode))
+        self.assertEqual(result, u'abc')
