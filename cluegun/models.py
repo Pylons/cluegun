@@ -1,3 +1,5 @@
+import transaction
+
 from datetime import datetime
 from persistent import Persistent
 
@@ -26,19 +28,9 @@ class PasteEntry(Persistent):
         self.language = language
         self.date = datetime.now()
         
-def appmaker(root):
+def appmaker(root, transaction=transaction):
     if not root.has_key('cluegun.pastebin'):
         root['cluegun.pastebin'] = PasteBin()
-        import transaction
         transaction.commit()
     return root['cluegun.pastebin']
 
-def NonPersistentRootFinder(db_path):
-    bin = PasteBin()
-    def get_root(environ):
-        return bin
-    return get_root
-
-            
-        
-        

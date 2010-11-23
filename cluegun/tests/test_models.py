@@ -26,3 +26,28 @@ class TestPasteEntry(unittest.TestCase):
         self.assertEqual(entry.language, 'language')
         self.failUnless(entry.date)
         
+class Test_appmaker(unittest.TestCase):
+    def _callFUT(self, root, txn):
+        from cluegun.models import appmaker
+        return appmaker(root, txn)
+
+    def test_already_exists(self):
+        root = {'cluegun.pastebin':'abc'}
+        txn = DummyTransaction()
+        result = self._callFUT(root, txn)
+        self.assertEqual(result, 'abc')
+        self.failIf(txn.committed)
+
+    def test_doesnt_exist(self):
+        from cluegun.models import PasteBin
+        root = {}
+        txn = DummyTransaction()
+        result = self._callFUT(root, txn)
+        self.assertEqual(result.__class__, PasteBin)
+        self.failUnless(txn.committed)
+        
+class DummyTransaction(object):
+    committed = False
+    def commit(self):
+        self.committed = True
+        
