@@ -74,8 +74,9 @@ def preferred_author(request):
     return author_name
 
 def check_passwd(passwd_file, login, password):
-    usersf = open(passwd_file, 'r')
-    for line in usersf:
+    if not hasattr(passwd_file, 'read'):
+        passwd_file = open(passwd_file, 'r')
+    for line in passwd_file:
         try:
             username, hashed = line.rstrip().split(':', 1)
         except ValueError:

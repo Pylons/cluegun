@@ -59,3 +59,26 @@ class Test_preferred_author(unittest.TestCase):
         result = self._callFUT(request)
         self.failUnless(isinstance(result, unicode))
         self.assertEqual(result, u'abc')
+
+class Test_check_passwd(unittest.TestCase):
+    def _callFUT(self, passwd_file, login, password):
+        from cluegun.views import check_passwd
+        return check_passwd(passwd_file, login, password)
+
+    def test_password_equals_hashed(self):
+        from StringIO import StringIO
+        passwd_file = StringIO('admin:admin\n')
+        result = self._callFUT(passwd_file, 'admin', 'admin')
+        self.assertEqual(result, 'admin')
+        
+    def test_password_doesnt_equal_hashed(self):
+        from StringIO import StringIO
+        passwd_file = StringIO('admin:admin\n')
+        result = self._callFUT(passwd_file, 'admin', 'wrongpassword')
+        self.assertEqual(result, None)
+        
+    def test_bad_data_in_file(self):
+        from StringIO import StringIO
+        passwd_file = StringIO('fudge\nadmin:admin\n')
+        result = self._callFUT(passwd_file, 'admin', 'admin')
+        self.assertEqual(result, 'admin')
