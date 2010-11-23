@@ -29,6 +29,16 @@ app_version = '0.0'
 COOKIE_LANGUAGE = 'cluebin.last_lang'
 COOKIE_AUTHOR = 'cluebin.last_author'
 
+formatter = formatters.HtmlFormatter(linenos=True, cssclass="source")
+style_defs = formatter.get_style_defs()
+all_lexers = list(lexers.get_all_lexers())
+all_lexers.sort()
+lexer_info = []
+for name, aliases, filetypes, mimetypes_ in all_lexers:
+    lexer_info.append({'alias':aliases[0], 'name':name})
+
+# utility functions
+
 def get_pastes(context, request, max):
     pastebin = find_interface(context, PasteBin)
     pastes = []
@@ -54,9 +64,27 @@ def get_pastes(context, request, max):
         pastes.append(new)
     return pastes
 
-formatter = formatters.HtmlFormatter(linenos=True,
-                                     cssclass="source")
-style_defs = formatter.get_style_defs()
+def preferred_author(request):
+    author_name = request.params.get('author_name', u'')
+    if not author_name:
+        author_name = request.cookies.get(COOKIE_AUTHOR, u'')
+    if isinstance(author_name, str):
+        author_name = unicode(author_name, 'utf-8')
+    return author_name
+
+def check_passwd(passwd_file, login, password):
+    usersf = open(passwd_file, 'r')
+    for line in usersf:
+        try:
+            username, hashed = line.rstrip().split(':', 1)
+        except ValueError:
+            continue
+        if username == login:
+            if password == hashed:
+                return username
+    return None
+
+# views and schemas
 
 @view_config(context=PasteEntry, permission='view',
              renderer='templates/entry.pt')
@@ -86,20 +114,6 @@ def entry_view(context, request):
         message = None,
         application_url = request.application_url,
         )
-
-def preferred_author(request):
-    author_name = request.params.get('author_name', u'')
-    if not author_name:
-        author_name = request.cookies.get(COOKIE_AUTHOR, u'')
-    if isinstance(author_name, str):
-        author_name = unicode(author_name, 'utf-8')
-    return author_name
-
-all_lexers = list(lexers.get_all_lexers())
-all_lexers.sort()
-lexer_info = []
-for name, aliases, filetypes, mimetypes_ in all_lexers:
-    lexer_info.append({'alias':aliases[0], 'name':name})
 
 class PasteAddSchema(formencode.Schema):
     allow_extra_fields = True
@@ -177,18 +191,6 @@ def manage_view(context, request):
         application_url = app_url,
         )
         
-def check_passwd(passwd_file, login, password):
-    usersf = open(passwd_file, 'r')
-    for line in usersf:
-        try:
-            username, hashed = line.rstrip().split(':', 1)
-        except ValueError:
-            continue
-        if username == login:
-            if password == hashed:
-                return username
-    return None
-
 @view_config(context=Forbidden, renderer='templates/login.pt')
 @view_config(context=PasteBin, name='login', renderer='templates/login.pt')
 def login(request):
