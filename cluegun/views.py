@@ -196,7 +196,7 @@ def manage_view(context, request):
 @view_config(context=Forbidden, renderer='templates/login.pt')
 @view_config(context=PasteBin, name='login', renderer='templates/login.pt')
 def login(request):
-    login_url = request.model_url(request.context, 'login')
+    login_url = request.resource_url(request.context, 'login')
     referrer = request.url
     if referrer == login_url:
         referrer = '/' # never use the login form itself as came_from
@@ -225,7 +225,7 @@ def login(request):
 @view_config(name='logout', context=PasteBin, permission='view')
 def logout(request):
     headers = forget(request)
-    return HTTPFound(location = request.model_url(request.context),
+    return HTTPFound(location = request.resource_url(request.context),
                      headers = headers)
     
 

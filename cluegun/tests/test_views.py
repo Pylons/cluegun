@@ -10,14 +10,14 @@ class Test_get_pastes(unittest.TestCase):
     def test_it(self):
         import datetime
         from cluegun.models import IPasteBin
-        pb = testing.DummyModel(__provides__=IPasteBin)
+        pb = testing.DummyResource(__provides__=IPasteBin)
         now = datetime.datetime.now()
         for x in range(0, 20):
-            entry = testing.DummyModel()
+            entry = testing.DummyResource()
             last_date = entry.date = now + datetime.timedelta(x)
             entry.author_name = 'author_name'
             pb[str(x)] = entry
-        context = testing.DummyModel(__parent__=pb)
+        context = testing.DummyResource(__parent__=pb)
         request = testing.DummyRequest()
         result = self._callFUT(context, request, 10)
         self.assertEqual(len(result), 10)
@@ -93,12 +93,12 @@ class Test_entry_view(unittest.TestCase):
         from cluegun.models import IPasteBin
         from cluegun.views import app_version
         now = datetime.datetime.now()
-        pb = testing.DummyModel(__provides__=IPasteBin)
-        entry = testing.DummyModel(language='python',
-                                   author_name='author_name',
-                                   paste='abc',
-                                   date=now,
-                                   __parent__=pb)
+        pb = testing.DummyResource(__provides__=IPasteBin)
+        entry = testing.DummyResource(language='python',
+                                      author_name='author_name',
+                                      paste='abc',
+                                      date=now,
+                                      __parent__=pb)
         pb['entry'] = entry
         request = testing.DummyRequest()
         result = self._callFUT(entry, request)
