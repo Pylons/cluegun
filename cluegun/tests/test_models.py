@@ -1,6 +1,6 @@
 import unittest
 
-from pyramid.testing import DummyResource
+from pyramid import testing
 
 class TestPasteBin(unittest.TestCase):
     def _makeOne(self, *arg, **kw):
@@ -9,7 +9,7 @@ class TestPasteBin(unittest.TestCase):
 
     def test_add_paste(self):
         pastebin = self._makeOne()
-        entry = DummyResource()
+        entry = testing.DummyResource()
         pastebin.add_paste(entry)
         self.assertEqual(pastebin[0], entry)
         self.assertEqual(pastebin.current_id, 0)
