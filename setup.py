@@ -21,14 +21,15 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'pyramid>=1.0a7',
-    'repoze.tm2',
+    'pyramid>=1.3a7',
+    'pyramid_tm',
     'repoze.monty',
     'ZODB3',
     'Pygments',
     'FormEncode',
-    'repoze.zodbconn',
+    'pyramid_zodbconn',
     'repoze.folder',
+    'waitress',
     ]
 
 __version__ = '0.0'
