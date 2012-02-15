@@ -1,7 +1,7 @@
 import transaction
 
 from zope.interface import Interface
-from zope.interface import implements
+from zope.interface import implementer
 
 from datetime import datetime
 from persistent import Persistent
@@ -15,8 +15,8 @@ from repoze.folder import Folder
 class IPasteBin(Interface):
     pass
 
+@implementer(IPasteBin)
 class PasteBin(Folder):
-    implements(IPasteBin)
     __acl__ = [ (Allow, Everyone, 'view'), (Allow, Authenticated, 'manage') ]
 
     current_id = -1
@@ -31,8 +31,8 @@ class PasteBin(Folder):
 class IPasteEntry(Interface):
     pass
 
+@implementer(IPasteEntry)
 class PasteEntry(Persistent):
-    implements(IPasteEntry)
     def __init__(self, author_name, paste, language):
         self.author_name = author_name
         self.paste = paste
