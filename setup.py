@@ -13,6 +13,7 @@
 ##############################################################################
 
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -33,6 +34,9 @@ requires = [
     ]
 
 __version__ = '0.0'
+
+if sys.version_info[:3] < (2,5,0):
+    raise RuntimeError('This application requires Python 2.6+')
 
 setup(name='cluegun',
       version=__version__,
